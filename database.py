@@ -18,6 +18,7 @@ createLinksTable = """CREATE TABLE links (
 rowID INTEGER PRIMARY KEY AUTOINCREMENT,
 channelCategory TEXT,
 channelName TEXT,
+guildID INTEGER,
 link TEXT)"""
 
 # Creates the table of channels the bot is to follow; stores both the channel ID
