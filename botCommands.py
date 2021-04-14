@@ -38,7 +38,6 @@ async def scrapeContent(ctx, args):
     # Get a list of all the channel IDs that the bot is following for the given
     # guild
     channelIDsCommand = "SELECT channelID FROM followedChannels WHERE guildID=?"
-    print(ctx.guild.id)
     curs.execute(channelIDsCommand, (ctx.guild.id,))
     # Returns a list of SQLite3 Row instances thanks to the row factory
     sqlRows = curs.fetchall()
@@ -52,9 +51,6 @@ async def scrapeContent(ctx, args):
             # channel itself; lowercase it for standardization purposes
             channelCategory = channel.category.name.lower()
             channelName = channel.name.lower()
-            print(f"{channelCategory}; type: {type(channelCategory)}")
-            print(f"{channelName}; type: {type(channelName)}")
-            print(links)
             for link in links:
                 insertCommand = """INSERT INTO links
                 (rowID, channelCategory, channelName, link) VALUES
