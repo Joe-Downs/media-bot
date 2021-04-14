@@ -53,8 +53,9 @@ async def scrapeContent(ctx, args):
             channelName = channel.name.lower()
             for link in links:
                 insertCommand = """INSERT INTO links
-                (rowID, channelCategory, channelName, link) VALUES
-                (NULL, ?, ?, ?)"""
-                curs.execute(insertCommand, (channelCategory, channelName, link,))
+                (rowID, channelCategory, channelName, guildID, link) VALUES
+                (NULL, ?, ?, ?, ?)"""
+                curs.execute(insertCommand,
+                             (channelCategory, channelName, ctx.guild.id, link,))
             database.conn.commit()
         await ctx.send(f"Appended **{linksAdded} links** to the database")
