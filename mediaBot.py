@@ -4,6 +4,7 @@ import sys
 import discord
 from discord.ext import commands
 # Custom Modules
+import botCommands
 import config
 
 owner_ID = 174362561385332736
@@ -11,6 +12,10 @@ botToken = config.getToken()
 prefix = config.getPrefix()
 
 bot = commands.Bot(command_prefix = prefix)
+
+@bot.command()
+async def follow(ctx, *args):
+    await botCommands.followChannels(ctx, args)
 
 @bot.command()
 async def sudo(ctx, arg):
