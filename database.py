@@ -12,14 +12,30 @@ conn = sqlite3.connect("media.db")
 conn.row_factory = sqlite3.Row
 curs = conn.cursor()
 
-sqlCommand = f"""CREATE TABLE links (
+# Creates the table of links the bot stores; stores the channel group name, the
+# channel name, and the link itself.
+createLinksTable = """CREATE TABLE links (
 rowID INTEGER PRIMARY KEY AUTOINCREMENT,
 channelGroup TEXT,
 channelName TEXT,
 link TEXT)"""
 
+# Creates the table of channels the bot is to follow; stores both the channel ID
+# and the guild ID
+createFollowTable = """CREATE TABLE followedChannels (
+rowID INTEGER PRIMARY KEY AUTOINCREMENT,
+channelID INTEGER,
+guildID INTEGER)"""
+
+# If an error is raised, the tables (hopefully) already exist; notify the user
+# of this and continue.
 try:
-    curs.execute(sqlCommand)
+    curs.execute(createLinksTable)
+except sqlite3.OperationalError as error:
+    print(error)
+
+try:
+    curs.execute(createFollowTable)
 except sqlite3.OperationalError as error:
     print(error)
 
