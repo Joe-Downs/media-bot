@@ -17,6 +17,13 @@ bot = commands.Bot(command_prefix = prefix)
 async def follow(ctx, *args):
     await botCommands.followChannels(ctx, args)
 
+# Scrapes all the followed channels in the server for links to add to the
+# database. Takes arguments for what to do with the links it scrapes (append or
+# overwrite) the database.
+@bot.command()
+async def scrape(ctx, *args):
+    await botCommands.scrapeContent(ctx, args)
+
 @bot.command()
 async def sudo(ctx, arg):
     if arg == "exit" or arg == "stop":
