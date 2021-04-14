@@ -18,10 +18,47 @@ async def followChannels(ctx, args):
         insertCommand = """INSERT INTO followedChannels 
         (rowID, channelID, guildID) VALUES 
         (NULL, ?, ?)"""
-        curs.execute(insertCommand, (guildID, channel.id,))
+        curs.execute(insertCommand, (channel.id, guildID,))
     database.conn.commit()
     await ctx.send(f"Added **{len(channels)} channels** to the database")
-        
-        
-        
+
+# Get a list of all the links in a given channel; takes a channel object and
+# returns a list of strings.
+async def getLinks(channel):
+    links = []
+    async for message in channel.history():
+        # If the message starts with "http" it's highly likely it's a link
+        if message.content.startswith("http"):
+            links.append(message.content)
+    return links
     
+# Scrapes all the followed channels in the given guild for links and appends or
+# overwrites the database with them. 
+async def scrapeContent(ctx, args):
+    # Get a list of all the channel IDs that the bot is following for the given
+    # guild
+    channelIDsCommand = "SELECT channelID FROM followedChannels WHERE guildID=?"
+    print(ctx.guild.id)
+    curs.execute(channelIDsCommand, (ctx.guild.id,))
+    # Returns a list of SQLite3 Row instances thanks to the row factory
+    sqlRows = curs.fetchall()
+    linksAdded = 0
+    if args[0].lower() == "append":
+        for row in sqlRows:
+            channel = ctx.guild.get_channel(row["channelID"])
+            links = await getLinks(channel)
+            linksAdded += len(links)
+            # Get the name of the category the channel is in and the name of the
+            # channel itself; lowercase it for standardization purposes
+            channelCategory = channel.category.name.lower()
+            channelName = channel.name.lower()
+            print(f"{channelCategory}; type: {type(channelCategory)}")
+            print(f"{channelName}; type: {type(channelName)}")
+            print(links)
+            for link in links:
+                insertCommand = """INSERT INTO links
+                (rowID, channelCategory, channelName, link) VALUES
+                (NULL, ?, ?, ?)"""
+                curs.execute(insertCommand, (channelCategory, channelName, link,))
+            database.conn.commit()
+        await ctx.send(f"Appended **{linksAdded} links** to the database")
