@@ -12,11 +12,11 @@ conn = sqlite3.connect("media.db")
 conn.row_factory = sqlite3.Row
 curs = conn.cursor()
 
-# Creates the table of links the bot stores; stores the channel group name, the
-# channel name, and the link itself.
+# Creates the table of links the bot stores; stores the channel category name,
+# the channel name, and the link itself.
 createLinksTable = """CREATE TABLE links (
 rowID INTEGER PRIMARY KEY AUTOINCREMENT,
-channelGroup TEXT,
+channelCategory TEXT,
 channelName TEXT,
 link TEXT)"""
 
