@@ -1,10 +1,13 @@
 # Python Modules
 import sqlite3
+from datetime import datetime
 
 # This file ensures that the database is created (or already exists) with all
 # the necessary tables
+nowDatetime = datetime.now()
+timestamp = nowDatetime.strftime("%y%m%d-%H%M%S")
 
-conn = sqlite3.connect("media.db")
+conn = sqlite3.connect(f"media-{timestamp}.db")
 # The Row instance allows for the row returned by sqlite3 to be mapped by column
 # name and index in a dictionary-like format. Additionally, "it
 # supports...iteration, representation, equality testing and len()"
