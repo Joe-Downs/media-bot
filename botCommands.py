@@ -15,8 +15,8 @@ async def followChannels(ctx, args):
     if args[0].lower() == "all":
         channels = ctx.guild.text_channels
     for channel in channels:
-        insertCommand = """INSERT INTO followedChannels 
-        (rowID, channelID, guildID) VALUES 
+        insertCommand = """INSERT INTO followedChannels
+        (rowID, channelID, guildID) VALUES
         (NULL, ?, ?)"""
         curs.execute(insertCommand, (channel.id, guildID,))
     database.conn.commit()
@@ -31,9 +31,9 @@ async def getLinks(channel):
         if message.content.startswith("http"):
             links.append(message.content)
     return links
-    
+
 # Scrapes all the followed channels in the given guild for links and appends or
-# overwrites the database with them. 
+# overwrites the database with them.
 async def scrapeContent(ctx, args):
     # Get a list of all the channel IDs that the bot is following for the given
     # guild
