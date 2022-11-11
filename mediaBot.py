@@ -11,7 +11,10 @@ owner_ID = 174362561385332736
 botToken = config.getToken()
 prefix = config.getPrefix()
 
-bot = commands.Bot(command_prefix = prefix)
+botIntents = discord.Intents.default()
+botIntents.message_content = True
+
+bot = commands.Bot(command_prefix = prefix, intents = botIntents)
 
 @bot.command()
 async def follow(ctx, *args):
