@@ -46,16 +46,26 @@ async def scrapeContent(ctx, args):
         for row in sqlRows:
             channel = ctx.guild.get_channel(row["channelID"])
             links = await getLinks(channel)
-            linksAdded += len(links)
             # Get the name of the category the channel is in and the name of the
             # channel itself; lowercase it for standardization purposes
             channelCategory = channel.category.name.lower()
             channelName = channel.name.lower()
             for link in links:
-                insertCommand = """INSERT INTO links
-                (rowID, channelCategory, channelName, guildID, link) VALUES
-                (NULL, ?, ?, ?, ?)"""
-                curs.execute(insertCommand,
-                             (channelCategory, channelName, ctx.guild.id, link,))
+                # Check if the link is already in the DB; if it isn't, add it to
+                # the DB, else, skip it.
+                checkCommand = """SELECT * FROM links WHERE channelCategory=?
+                AND channelName=? AND guildID=? AND link=?;"""
+                valueTuple = (channelCategory, channelName, ctx.guild.id, link,)
+                curs.execute(checkCommand, valueTuple)
+                row = curs.fetchone()
+                if row is None:
+                    print(f"Adding {channelCategory} - {channelName} ({link})")
+                    insertCommand = """INSERT INTO links (rowID,
+                    channelCategory, channelName, guildID, link) VALUES (NULL,
+                    ?, ?, ?, ?)"""
+                    curs.execute(insertCommand, valueTuple)
+                    linksAdded += 1
+                else:
+                    pass
             database.conn.commit()
         await ctx.send(f"Appended **{linksAdded} links** to the database")
