@@ -45,7 +45,10 @@ async def scrapeContent(ctx, args):
     if args[0].lower() == "append":
         for row in sqlRows:
             channel = ctx.guild.get_channel(row["channelID"])
-            links = await getLinks(channel)
+            try:
+                links = await getLinks(channel)
+            except:
+                continue
             # Get the name of the category the channel is in and the name of the
             # channel itself; lowercase it for standardization purposes
             channelCategory = channel.category.name.lower()
