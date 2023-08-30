@@ -1,0 +1,3 @@
+[submodule "GfycatDownloader"]
+	path = GfycatDownloader
+	url = git@github.com:ShineAsNine/GfycatDownloader.git
